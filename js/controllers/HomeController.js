@@ -1,5 +1,5 @@
 app.controller('HomeController',[ '$scope','$http','$q','$timeout',function($scope,$http,$q,$timeout){
-// Practicing Promises
+// Practicing Promises for better instruction
     var promises = [];
     function AsyncFunction(msec,text) {
         var defer = $q.defer();
