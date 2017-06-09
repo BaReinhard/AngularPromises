@@ -4,14 +4,24 @@ app.controller('HomeController',[ '$scope','$http','$q','$timeout',function($sco
     function AsyncFunction(msec,text) {
         var defer = $q.defer();
         $timeout(function () {
-            defer.resolve();
+           
             PrintWhenDone(text);
+            $timeout(function () {
+
+                defer.resolve();
+            },100)
         },msec)
 
         return defer.promise
     }
     function PrintWhenDone(text) {
-        console.log(text);
+        var deferred = $q.defer();
+        $timeout(function(){
+            
+            console.log(text);
+            deferred.resolve();
+        })
+        return deferred.promise;
     }
     
 
@@ -35,10 +45,73 @@ app.controller('HomeController',[ '$scope','$http','$q','$timeout',function($sco
     // Last to Return
     promises.push(AsyncFunction(11000, "Sixth Callback Done"));
 
-    // When all Promises have resolved
+
+
+    //// This is called CallBack Hell!
+    //$q.all(promises).then(function () {
+    //    console.log("All Callbacks have finished");
+
+    //    console.log("Now All Callbacks Sequentially")
+    //    // First to Return
+    //    promises.push(AsyncFunction(3000, "First CallBack Done"));
+    //    $q.all(promises).then(function () {
+    //        // Second to Return
+    //        promises.push(AsyncFunction(2500, "Second CallBack Done"));
+    //        $q.all(promises).then(function () {
+    //            // Third to Return
+    //            promises.push(AsyncFunction(400, "Third Callback Done").then(function () {
+    //                PrintWhenDone("Creating a new Promise after Third CallBack");
+    //                promises.push(AsyncFunction(4000, "Call back created in Third Call Back Then Function").then(PrintWhenDone.bind(null, "is this confusing enough yet")));
+    //            }));
+    //            $q.all(promises).then(function () {
+    //                // Fourth to Return
+    //                promises.push(AsyncFunction(10000, "Fourth Callback Done").then(PrintWhenDone.bind(null, "Fourth Call Back then Function")));
+    //                $q.all(promises).then(function () {
+    //                    // Fifth to Return
+    //                    promises.push(AsyncFunction(100, "Fifth Callback Done"));
+    //                    $q.all(promises).then(function () {
+    //                        // Sixth to Return
+    //                        promises.push(AsyncFunction(11000, "Sixth Callback Done"));
+    //                    })
+    //                })
+    //            })
+    //        })
+    //    })
+    //})
+        
+        // Cleaner Better Practice
     $q.all(promises).then(function () {
-        console.log("All Callbacks have finished");
+        console.log("Alternative and Cleaner Code Running");
+        // First to Return
+        AsyncFunction(3000, "First CallBack Done")
+        .then(AsyncFunction.bind(null,2500, "Second CallBack Done"))
+        .then(AsyncFunction.bind(null, 400, "Third Callback Done"))
+        .then(AsyncFunction.bind(null, 4000, "Call back created in Third Call Back Then Function"))
+        .then(PrintWhenDone.bind(null, "is this confusing enough yet"))
+        .then(AsyncFunction.bind(null, 10000, "Fourth Callback Done"))
+        .then(PrintWhenDone.bind(null, "Fourth Call Back then Function"))
+        .then(AsyncFunction.bind(null, 100, "Fifth Callback Done"))
+        .then(AsyncFunction.bind(null, 11000, "Sixth Callback Done"))
+        .then(PrintWhenDone.bind(null, "All Call Backs have finished"))
+
+
     })
+        
+        
+           
+        
+
+        
+        
+        
+        
+        
+
+    
+
+
+
+    // Now Handle All Sequentially
+
+
 }]);
-
-
