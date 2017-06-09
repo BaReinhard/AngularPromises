@@ -1,0 +1,2 @@
+# AngularPromises
+Practicing Angular Promises
