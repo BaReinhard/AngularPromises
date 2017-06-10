@@ -78,7 +78,30 @@ app.controller('HomeController',[ '$scope','$http','$q','$timeout',function($sco
             })
         })
     })
-        
+   // A bit cleaner, not quite better
+ $q.all(promises).then(function(){
+ AsyncFunction(30, "First CallBack Done").then(function(){
+    AsyncFunction(25, "Second CallBack Done").then(function(){
+        AsyncFunction(4, "Third Callback Done").then(function(){
+            AsyncFunction(4, "Call back created in Third Call Back Then Function").then(function(){
+                PrintWhenDone("is this confusing enough yet").then(function(){
+                    AsyncFunction(10,"Fourth Callback done").then(function(){
+                        PrintWhenDone("Fourth Call Back then Function").then(function(){
+                            AsyncFunction(10, "Fifth Callback Done".then(function(){
+                                AsyncFunction(11, "Sixth Callback Done").then(function(){
+                                    PrintWhenDone("All Call Backs have finished");
+                            });
+                        });
+                    });
+                });
+            });
+        });
+    });
+ });
+    
+    
+    
+}
         // Cleaner Better Practice
     $q.all(promises).then(function () {
         console.log("Alternative and Cleaner Code Running");
